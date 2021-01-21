@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Provider as BumbagProvider, css } from 'bumbag';
 import { PageContent, PageWithSidebar } from 'bumbag';
+import BumbagMarkdown from './Bumbag/BumbagMarkdown';
 import FileReader from './FileReader';
 import { DateTime } from './utils/DateTime';
 import './App.css';
@@ -43,16 +44,21 @@ const theme = {
 }
 
 export default function App() {
+  
+	const [fileAttributes, setFileAttributes] = useState({});
+
+  function handleChange(newValue) {
+    setFileAttributes(newValue);
+  }
 
   return (
     <div className="App">
       <BumbagProvider theme={theme}>
         <PageWithSidebar
-          sidebar={<PageContent><DateTime /></PageContent>}
+          sidebar={<PageContent><DateTime /><FileReader onChange={handleChange} attributes={fileAttributes} />{fileAttributes.name || ''}</PageContent>}
           sidebarPlacement="left"
         >
-          <FileReader />
-          {/* <BumbagMarkdown markdown={'hello world'} /> */}
+          <BumbagMarkdown markdown={fileAttributes.value || ''} />
         </PageWithSidebar>
       </BumbagProvider>
     </div>
