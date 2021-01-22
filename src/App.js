@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import parse from 'html-react-parser';
+// import parse from 'html-react-parser';
 import { Provider as BumbagProvider, css } from 'bumbag';
-import { Columns, Box } from 'bumbag';
+import { Columns, Box, Textarea } from 'bumbag';
 import BumbagMarkdown from './Bumbag/BumbagMarkdown';
+import { faFolder, faFolderOpen, faSave, faFileExport, faTimes } from '@fortawesome/free-solid-svg-icons';
 import FileReader from './FileReader';
 // import { DateTime } from './utils/DateTime';
+import './App.css';
 
 export const ThemeContext = React.createContext()
 
@@ -20,6 +22,15 @@ const theme = {
         }
       `
     }
+  },
+  Icon: {
+    iconSets: [
+      {
+        icons: [faFolder, faFolderOpen, faSave, faFileExport, faTimes],
+        prefix: 'solid-',
+        type: 'font-awesome'
+      }
+    ]
   },
   breakpoints: {
     mobile: 520,
@@ -86,39 +97,47 @@ const theme = {
 export default function App() {
   
 	const [fileAttributes, setFileAttributes] = useState({});
+  const [value, setValue] = React.useState('');
 
   function handleChange(newValue) {
     setFileAttributes(newValue);
+    setValue(newValue.value)
   }
 
-  const filePlain = fileAttributes.value ? parse(fileAttributes.value.replace(/(?:\r\n|\r|\n)/g, '<br>')) : '';
+  // const filePlain = fileAttributes.value ? parse(fileAttributes.value.replace(/(?:\r\n|\r|\n)/g, '<br>')) : '';
 
   return (
     <div className="App">
       <BumbagProvider theme={theme}>
         <Box backgroundColor="whitesmoke" padding="0.5rem" margin="0">
           <Columns>
-            {/* <Columns.Column>
+            {/* 
+            <Columns.Column>
               <DateTime />
-            </Columns.Column> */}
-            <Columns.Column>
+            </Columns.Column> 
+            */}
+            <Columns.Column alignX="center">
               <FileReader onChange={handleChange} attributes={fileAttributes} />
-            </Columns.Column>
-            <Columns.Column>
-              {fileAttributes.name || ''}
             </Columns.Column>
           </Columns>
         </Box>
         <Box>
           <Columns>
-            <Columns.Column spread={6} alignX="right" >
-              <Box padding="0.5rem" alignX="right" >
-                {fileAttributes.name ? filePlain : ''}
+            <Columns.Column spread={6}>
+              <Box padding="0.5rem">
+                <Textarea 
+                  size="large"
+                  value={value}
+                  onChange={e => setValue(e.target.value)}
+                />
               </Box>
             </Columns.Column>
             <Columns.Column spread={6}>
               <Box padding="0.5rem">
-                <BumbagMarkdown markdown={fileAttributes.value || ''} />
+                <BumbagMarkdown 
+                  onChange={handleChange}
+                  markdown={value} 
+                />
               </Box>
             </Columns.Column>
           </Columns>
