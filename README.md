@@ -6,8 +6,6 @@ Select a .txt file and render it using markdown in your browser.
 
 Supported markdown examples:
 ```
-> This is a blockquote.
-
 # Heading 1
 ## Heading 2
 ### Heading 3
@@ -19,25 +17,24 @@ Supported markdown examples:
 _This is italic text_
 _**This is bold italic text**_
 
-- List
-- Is
+| Sample | Header |
+| ------ | ----------- |
+| about | Insert your data into tables |
+| easy | Use brackets to create cells |
+
+> This is a blockquote.
+
 - Unordered
+- List
+- Items 
 
 1. This
-1. Uses
-1. Numbers
+1. Ordered
+1. List
 
-| Title | Description |
-| ------ | ----------- |
-| Sample   | First table data row |
-| Values | Fill this in with something |
-| Here    | Running out of examples |
+It also supports [links](https://google.com) and images.
 
-It also supports [links](https://google.com)
-
-And images:
-
-![Picsum](https://picsum.photos/300/150)
+![Picsum](https://picsum.photos/600/300)
 ```
 
 ## Available Scripts

@@ -137,11 +137,12 @@ export default function App() {
 
   function fileDownload(newValue) {
     // Save to new file
-    const name = newValue.name || 'export';
+    const shortName = newValue.name ? newValue.name.slice(0, -4) : null;
+    const fileName = prompt('Name the text file', shortName || 'export') || shortName || 'export';
     const element = document.createElement("a");
     const file = new Blob([document.getElementById('editor').value], {type: 'text/plain'});
     element.href = URL.createObjectURL(file);
-    element.download = name;
+    element.download = fileName;
     document.body.appendChild(element); // Required for this to work in FireFox
     element.click();
   }
@@ -158,7 +159,7 @@ export default function App() {
   return (
     <div className="App">
       <BumbagProvider theme={theme}>
-        <Box backgroundColor="#f5f5f5" padding="0.5rem" margin="0">
+        <Box backgroundColor="#f5f5f5" padding="0.2rem" margin="0">
           <TopNav>
             <TopNav.Section>
               <TopNav.Item href="#" variant="pill">
