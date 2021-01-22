@@ -1,7 +1,9 @@
 import React from 'react';
-import { Button } from 'bumbag';
+import { Icon } from 'bumbag';
+import { faFolder, faFolderOpen } from '@fortawesome/free-solid-svg-icons';
 import ReactFileReader from 'react-file-reader';
 import base64 from 'base-64';
+import './FileReader.css';
 
 export const FileReader = (props) => {
 	
@@ -9,7 +11,7 @@ export const FileReader = (props) => {
 		// Callback with the new value
 		props.onChange(newFileAttributes);
 	}
-	
+
 	const handleFileChosen = (files) => {
 		const file = files.fileList[0];
 		const baseRaw = files.base64;
@@ -26,7 +28,14 @@ export const FileReader = (props) => {
 			fileTypes={[".txt"]}
 			base64={true}
 		>
-			<Button>Select File</Button>
+			<Icon 
+				aria-label="Folder" 
+				icon={ props.attributes.name ? faFolderOpen : faFolder} 
+				type="font-awesome"
+				fontSize="500"
+			>
+				Select File
+			</Icon>
 		</ReactFileReader>
 	);
 }
