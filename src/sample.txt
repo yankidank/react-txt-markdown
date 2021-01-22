@@ -1,5 +1,3 @@
-> This is a blockquote.
-
 # Heading 1
 ## Heading 2
 ### Heading 3
@@ -11,25 +9,21 @@
 _This is italic text_
 _**This is bold italic text**_
 
-- Get
-- Around
-- This
-- List
-
-1. What
-1. About
-1. An
-1. Ordered
-1. One?
-
-| Option | Description |
+| Sample | Header |
 | ------ | ----------- |
-| data   | path to data files to supply the data that will be passed into templates. |
-| engine | engine to be used for processing templates. Handlebars is the default. |
-| ext    | extension to be used for dest files. |
+| about | Insert your data into tables |
+| easy | Use brackets to create cells |
 
-It also supports [links](https://google.com)
+> This is a blockquote.
 
-And images:
+- Unordered
+- List
+- Items 
 
-![Picsum](https://picsum.photos/300/150)
+1. This
+1. Ordered
+1. List
+
+It also supports [links](https://google.com) and images.
+
+![Picsum](https://picsum.photos/600/300)
