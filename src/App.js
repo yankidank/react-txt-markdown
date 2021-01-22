@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 // import parse from 'html-react-parser';
 import { Provider as BumbagProvider, css } from 'bumbag';
-import { Columns, Box, TopNav, Button, Textarea } from 'bumbag';
+import { Columns, Box, TopNav, Button, Textarea, Clickable } from 'bumbag';
 import BumbagMarkdown from './Bumbag/BumbagMarkdown';
-import { faFolder, faFolderOpen, faSave, faCheck, faFileExport, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faFolder, faFolderOpen, faSave, faFileDownload, faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
 import FileReader from './FileReader';
 import { PrintTime } from './utils/DateTime';
 import './App.css';
@@ -32,7 +32,7 @@ const theme = {
   Icon: {
     iconSets: [
       {
-        icons: [faFolder, faFolderOpen, faSave, faCheck, faFileExport, faTimes],
+        icons: [faFolder, faFolderOpen, faSave, faFileDownload, faCheck, faTimes],
         prefix: 'solid-',
         type: 'font-awesome'
       }
@@ -107,7 +107,43 @@ export default function App() {
 
   function handleChange(newValue) {
     setFileAttributes(newValue);
-    setValue(newValue.value)
+    setValue(newValue.value);
+  }
+
+  /* 
+  function handleSave() {
+    const newValue = {...fileAttributes, value: value};
+    fileSave(newValue);
+    setFileAttributes(newValue);
+    setValue(newValue.value);
+  }
+
+  function fileSave(newValue) {
+    // Save to original file
+    const {name, value } = newValue;
+    const editorValue = document.getElementById('editor').value;
+    console.log(editorValue);
+    console.log(name);
+    console.log(value);
+  } 
+  */
+
+  function handleDownload() {
+    const newValue = {...fileAttributes, value: value};
+    fileDownload(newValue);
+    setFileAttributes(newValue);
+    setValue(newValue.value);
+  }
+
+  function fileDownload(newValue) {
+    // Save to new file
+    const name = newValue.name || 'export';
+    const element = document.createElement("a");
+    const file = new Blob([document.getElementById('editor').value], {type: 'text/plain'});
+    element.href = URL.createObjectURL(file);
+    element.download = name;
+    document.body.appendChild(element); // Required for this to work in FireFox
+    element.click();
   }
 
   // const filePlain = fileAttributes.value ? parse(fileAttributes.value.replace(/(?:\r\n|\r|\n)/g, '<br>')) : '';
@@ -115,7 +151,7 @@ export default function App() {
 /*   
   function handleKeyPress(event){
     event.stopPropagation();
-    console.log(event)
+    console.log(event);
   } 
 */
   
@@ -128,13 +164,40 @@ export default function App() {
               <TopNav.Item href="#" variant="pill">
                 <FileReader onChange={handleChange} attributes={fileAttributes} />
               </TopNav.Item>
+              {/* 
               <TopNav.Item href="#" variant="pill">
                 { fileAttributes.name ? // Still in development
-                  <Button palette="primary" iconBefore={'solid-save'} >Save</Button>
+                  <Clickable
+                    use={Button}
+                    palette="primary" 
+                    iconBefore={'solid-save'} 
+                    // onClick={() => alert('Clicked')}
+                    onClick={handleSave}
+                  >
+                    Save
+                  </Clickable>
                  : 
-                  <Button variant="ghost" iconBefore={'solid-check'} >Saved</Button>
+                  <>
+                   <Button variant="ghost" iconBefore={'solid-check'} >Saved</Button>
+                  </> 
                 }
-              </TopNav.Item>
+              </TopNav.Item> 
+              */}
+              {value ? 
+                <TopNav.Item href="#" variant="pill">
+                  <Clickable
+                    use={Button}
+                    palette="secondary" 
+                    iconBefore={'solid-file-download'} 
+                    // onClick={() => alert('Clicked')}
+                    onClick={handleDownload}
+                  >
+                    Download
+                  </Clickable>
+                </TopNav.Item>
+               : 
+                <></>
+              }
             </TopNav.Section>
             <TopNav.Section>
               <TopNav.Item paddingRight="15px" fontWeight="semibold">
@@ -143,11 +206,12 @@ export default function App() {
             </TopNav.Section>
           </TopNav>
         </Box>
-        <Box marginTop="5px">
+        <Box>
           <Columns>
             <Columns.Column spread={6}>
-              <Box padding="0.5rem">
+              <Box padding="0.75rem">
                 <Textarea
+                  id="editor"
                   size="large"
                   value={value}
                   // onKeyPress={handleKeyPress}
@@ -156,7 +220,7 @@ export default function App() {
               </Box>
             </Columns.Column>
             <Columns.Column spread={6}>
-              <Box padding="0.5rem">
+              <Box padding="0.75rem">
                 <BumbagMarkdown 
                   onChange={handleChange}
                   markdown={value} 
