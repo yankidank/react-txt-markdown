@@ -1,23 +1,29 @@
 import React, { useState } from 'react';
 // import parse from 'html-react-parser';
 import { Provider as BumbagProvider, css } from 'bumbag';
-import { Columns, Box, Textarea } from 'bumbag';
+import { Columns, Box, TopNav, Button, Textarea } from 'bumbag';
 import BumbagMarkdown from './Bumbag/BumbagMarkdown';
-import { faFolder, faFolderOpen, faSave, faFileExport, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faFolder, faFolderOpen, faSave, faCheck, faFileExport, faTimes } from '@fortawesome/free-solid-svg-icons';
 import FileReader from './FileReader';
-// import { DateTime } from './utils/DateTime';
+import { PrintTime } from './utils/DateTime';
 import './App.css';
 
 export const ThemeContext = React.createContext()
 
 const theme = {
+  palette: {
+    text: '#212121',
+    primary: '#2582d1',
+    primaryInverted: '#fff',
+    secondary: '#ffffff00'
+  },
   global: {
-    fontSize: 16,
+    fontSize: 15,
     styles: {
       base: css`
         html,
         body {
-          background-color: white;
+          background-color: #e8e8e8;
           color: black;
         }
       `
@@ -26,7 +32,7 @@ const theme = {
   Icon: {
     iconSets: [
       {
-        icons: [faFolder, faFolderOpen, faSave, faFileExport, faTimes],
+        icons: [faFolder, faFolderOpen, faSave, faCheck, faFileExport, faTimes],
         prefix: 'solid-',
         type: 'font-awesome'
       }
@@ -105,29 +111,46 @@ export default function App() {
   }
 
   // const filePlain = fileAttributes.value ? parse(fileAttributes.value.replace(/(?:\r\n|\r|\n)/g, '<br>')) : '';
-
+  
+/*   
+  function handleKeyPress(event){
+    event.stopPropagation();
+    console.log(event)
+  } 
+*/
+  
   return (
     <div className="App">
       <BumbagProvider theme={theme}>
-        <Box backgroundColor="whitesmoke" padding="0.5rem" margin="0">
-          <Columns>
-            {/* 
-            <Columns.Column>
-              <DateTime />
-            </Columns.Column> 
-            */}
-            <Columns.Column alignX="center">
-              <FileReader onChange={handleChange} attributes={fileAttributes} />
-            </Columns.Column>
-          </Columns>
+        <Box backgroundColor="#f5f5f5" padding="0.5rem" margin="0">
+          <TopNav>
+            <TopNav.Section>
+              <TopNav.Item href="#" variant="pill">
+                <FileReader onChange={handleChange} attributes={fileAttributes} />
+              </TopNav.Item>
+              <TopNav.Item href="#" variant="pill">
+                { fileAttributes.name ? // Still in development
+                  <Button palette="primary" iconBefore={'solid-save'} >Save</Button>
+                 : 
+                  <Button variant="ghost" iconBefore={'solid-check'} >Saved</Button>
+                }
+              </TopNav.Item>
+            </TopNav.Section>
+            <TopNav.Section>
+              <TopNav.Item paddingRight="15px" fontWeight="semibold">
+                <PrintTime />
+              </TopNav.Item>
+            </TopNav.Section>
+          </TopNav>
         </Box>
-        <Box>
+        <Box marginTop="5px">
           <Columns>
             <Columns.Column spread={6}>
               <Box padding="0.5rem">
-                <Textarea 
+                <Textarea
                   size="large"
                   value={value}
+                  // onKeyPress={handleKeyPress}
                   onChange={e => setValue(e.target.value)}
                 />
               </Box>

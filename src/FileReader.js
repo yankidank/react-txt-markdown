@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactFileReader from 'react-file-reader';
-import { Menu } from 'bumbag';
+import { Button } from 'bumbag';
 import base64 from 'base-64';
 
 export const FileReader = (props) => {
@@ -26,9 +26,14 @@ export const FileReader = (props) => {
 			fileTypes={[".txt"]}
 			base64={true}
 		>
-			<Menu.Item iconBefore={ props.attributes.name ? 'solid-folder-open' : 'solid-folder'} >
+			<Button 
+				// variant="outlined" 
+				palette={'primary'}
+				variant={ props.attributes.name ? 'ghost' : ''}
+				iconBefore={ props.attributes.name ? 'solid-folder-open' : 'solid-folder'}
+			>
 				{props.attributes.name ? props.attributes.name : 'Select File'}
-			</Menu.Item>
+			</Button>
 		</ReactFileReader>
 	);
 }
