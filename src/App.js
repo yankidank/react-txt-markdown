@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import ls from 'local-storage';
 // import parse from 'html-react-parser';
 import { Provider as BumbagProvider, css } from 'bumbag';
 import { Columns, Box, TopNav, Button, Textarea, Clickable } from 'bumbag';
@@ -35,6 +36,16 @@ const theme = {
         type: 'font-awesome'
       }
     ]
+  },
+  Button: {
+    variants: {
+      'ghost': {
+        defaultProps: {
+          palette: 'default',
+          opacity: '0.5'
+        }
+      }
+    }
   },
   breakpoints: {
     mobile: 520,
@@ -97,35 +108,54 @@ export default function App() {
   
 	const [fileAttributes, setFileAttributes] = useState({name:'', value: ''});
   const [value, setValue] = React.useState(''); // Textarea value
+  const [editorValue, setEditorValue] = React.useState(''); // logic value
 
-  function handleChange(newValue) {
+  const handleChange = (newValue) => {
     setFileAttributes(newValue);
     setValue(newValue.value);
+    setEditorValue(newValue.value)
   }
-/* 
-  function handleSave() {
-    const newValue = {...fileAttributes, value: value};
-    fileSave(newValue);
+
+  const handleSave = () => {
+    const checkValue = document.getElementById('editor') ? document.getElementById('editor').value : '';
+    const newValue = {...fileAttributes, value: checkValue};
     setFileAttributes(newValue);
     setValue(newValue.value);
+    localSet(newValue);
   }
 
-  function fileSave(newValue) {
-    // Save to original file
-    const {name, value } = newValue;
-    const editorValue = document.getElementById('editor') ? document.getElementById('editor').value : '';
-    // Function needs added
+  const localSet = (newValue) => {
+    // const {name, value } = newValue;
+    let checkValue = {...newValue, value: ''};
+    if ( newValue === undefined || newValue.value === undefined){
+      checkValue = {...fileAttributes, value: ''};
+    } else if ( newValue !== undefined && newValue.value !== undefined ){
+      checkValue = {...newValue, value: newValue.value};
+    } else {
+      checkValue = {...fileAttributes, value: document.getElementById('editor') ? document.getElementById('editor').value : ''};
+    }
+    ls.set('document', checkValue.value);
   }
-*/
 
-  function handleDownload() {
+  const localGet = () => {
+    return ls.get('document') || null;
+  }
+
+  const localRemove = () => {
+    ls.remove('document');
+    setFileAttributes({name:'', value: ''});
+    setValue('');
+    setEditorValue('');
+  }
+
+  const handleDownload = () => {
     const newValue = {...fileAttributes, value: value};
     fileDownload(newValue);
     setFileAttributes(newValue);
     setValue(newValue.value);
   }
 
-  function fileDownload(newValue) {
+  const fileDownload = (newValue) => {
     // Save to new file
     const shortName = newValue.name ? newValue.name.slice(0, -4) : null;
     const fileName = prompt('Name the text file', shortName || 'export') || shortName || 'export';
@@ -137,14 +167,20 @@ export default function App() {
     element.click();
   }
 /*   
-  function handleKeyPress(event){
+  const handleKeyPress = (event) => {
     event.stopPropagation();
     console.log(event);
   } 
 */
-  // const editorValue = document.getElementById('editor') ? document.getElementById('editor').value : '';
+
   // const filePlain = fileAttributes.value ? parse(fileAttributes.value.replace(/(?:\r\n|\r|\n)/g, '<br>')) : '';
-  
+
+  useEffect(() => {
+    if (localGet() !== null){
+      setEditorValue(localGet())
+    }
+  }, [])
+
   return (
     <div className='App'>
       <BumbagProvider theme={theme}>
@@ -154,11 +190,10 @@ export default function App() {
               <TopNav.Item href='#' variant='pill'>
                 <FileReader onChange={handleChange} attributes={fileAttributes} />
               </TopNav.Item>
-{/* 
               <TopNav.Item href='#' variant='pill'>
                 { editorValue === '' ?  // Still in development
-                  <Button variant='ghost' iconBefore={'solid-hourglass-half'}>Awaiting</Button>
-                : fileAttributes.value === editorValue ? 
+                  <Button variant='ghost' iconBefore={'solid-hourglass-half'}>Waiting</Button>
+                : fileAttributes.value === editorValue || localGet() === editorValue ? 
                   <Button variant='ghost' iconBefore={'solid-check'} >Saved</Button>
                 : 
                   <Clickable
@@ -171,12 +206,12 @@ export default function App() {
                   </Clickable>
                 }
               </TopNav.Item>
-*/}
               <TopNav.Item href='#' variant='pill'>
-                {value === '' ? 
+                {editorValue === '' ? 
                   <Button
+                    // disabled
                     variant='ghost'
-                    iconBefore={'solid-file-download'} 
+                    iconBefore={'solid-file-download'}
                     // onClick={() => alert('Clicked')}
                     // onClick={handleDownload}
                   >
@@ -193,6 +228,16 @@ export default function App() {
                   </Clickable>
                 }
               </TopNav.Item>
+              <TopNav.Item>
+                <Clickable
+                  use={Button}
+                  palette="danger"
+                  iconBefore={'solid-times'} 
+                  onClick={localRemove}
+                >
+                  Clear
+                </Clickable>
+              </TopNav.Item>
             </TopNav.Section>
             {/* <TopNav.Section>
               <TopNav.Item paddingRight='15px' fontWeight='semibold'>
@@ -207,10 +252,9 @@ export default function App() {
               <Box padding='0.75rem'>
                 <Textarea
                   id='editor'
-                  // height='100%'
-                  value={value}
+                  value={editorValue}
                   // onKeyPress={handleKeyPress}
-                  onChange={e => setValue(e.target.value)}
+                  onChange={e => { setValue(e.target.value); setEditorValue(e.target.value) }}
                 />
               </Box>
             </Columns.Column>
