@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
+// import autosize from "autosize";
 // import parse from 'html-react-parser';
 import { Provider as BumbagProvider, css } from 'bumbag';
 import { Columns, Box, TopNav, Button, Textarea, Clickable } from 'bumbag';
 import BumbagMarkdown from './Bumbag/BumbagMarkdown';
 import { faFolder, faFolderOpen, faSave, faFileDownload, faCheck, faTimes, faHourglassHalf } from '@fortawesome/free-solid-svg-icons';
 import FileReader from './FileReader';
-import { PrintTime } from './utils/DateTime';
+// import { PrintTime } from './utils/DateTime';
 import './App.css';
 
 export const ThemeContext = React.createContext()
@@ -147,10 +148,12 @@ export default function App() {
   // const editorValue = document.getElementById('editor') ? document.getElementById('editor').value : '';
   // const filePlain = fileAttributes.value ? parse(fileAttributes.value.replace(/(?:\r\n|\r|\n)/g, '<br>')) : '';
 
+//  autosize(document.getElementById('editor'));
+
   return (
     <div className='App'>
       <BumbagProvider theme={theme}>
-        <Box backgroundColor='#f5f5f5' padding='0.2rem' margin='0'>
+        <Box backgroundColor='#f5f5f5' padding='0.2rem' margin='0' minHeight="68px">
           <TopNav>
             <TopNav.Section>
               <TopNav.Item href='#' variant='pill'>
@@ -196,20 +199,20 @@ export default function App() {
                 }
               </TopNav.Item>
             </TopNav.Section>
-            <TopNav.Section>
+            {/* <TopNav.Section>
               <TopNav.Item paddingRight='15px' fontWeight='semibold'>
                 <PrintTime />
               </TopNav.Item>
-            </TopNav.Section>
+            </TopNav.Section> */}
           </TopNav>
         </Box>
-        <Box>
+        <Box height='90vh'>
           <Columns>
             <Columns.Column spread={6}>
               <Box padding='0.75rem'>
                 <Textarea
                   id='editor'
-                  size='large'
+                  // height='100%'
                   value={value}
                   // onKeyPress={handleKeyPress}
                   onChange={e => setValue(e.target.value)}
