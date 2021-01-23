@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-// import autosize from "autosize";
 // import parse from 'html-react-parser';
 import { Provider as BumbagProvider, css } from 'bumbag';
 import { Columns, Box, TopNav, Button, Textarea, Clickable } from 'bumbag';
@@ -8,8 +7,6 @@ import { faFolder, faFolderOpen, faSave, faFileDownload, faCheck, faTimes, faHou
 import FileReader from './FileReader';
 // import { PrintTime } from './utils/DateTime';
 import './App.css';
-
-export const ThemeContext = React.createContext()
 
 const theme = {
   palette: {
@@ -99,7 +96,7 @@ const theme = {
 export default function App() {
   
 	const [fileAttributes, setFileAttributes] = useState({name:'', value: ''});
-  const [value, setValue] = React.useState('');
+  const [value, setValue] = React.useState(''); // Textarea value
 
   function handleChange(newValue) {
     setFileAttributes(newValue);
@@ -147,9 +144,7 @@ export default function App() {
 */
   // const editorValue = document.getElementById('editor') ? document.getElementById('editor').value : '';
   // const filePlain = fileAttributes.value ? parse(fileAttributes.value.replace(/(?:\r\n|\r|\n)/g, '<br>')) : '';
-
-//  autosize(document.getElementById('editor'));
-
+  
   return (
     <div className='App'>
       <BumbagProvider theme={theme}>
