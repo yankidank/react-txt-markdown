@@ -28,7 +28,6 @@ export const FileReader = (props) => {
 		>
 			<Button 
 				// variant="outlined" 
-				palette={'primary'}
 				variant={ props.attributes.name ? 'ghost' : ''}
 				iconBefore={ props.attributes.name ? 'solid-folder-open' : 'solid-folder'}
 			>
