@@ -2,6 +2,10 @@
 
 Select a .txt file and render it using markdown in your browser.  
 
+[
+![react-text-editor](https://user-images.githubusercontent.com/18619/105570240-d5001b00-5cfc-11eb-9d88-966cc6c959b3.png)
+](url)
+
 ## Sample.txt
 
 Supported markdown examples:
