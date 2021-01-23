@@ -134,15 +134,15 @@ export default function App() {
     } else {
       checkValue = {...fileAttributes, value: document.getElementById('editor') ? document.getElementById('editor').value : ''};
     }
-    ls.set('document', checkValue.value);
+    ls.set('reactTextEditor', {...fileAttributes, value: checkValue.value});
   }
 
   const localGet = () => {
-    return ls.get('document') || null;
+    return ls.get('reactTextEditor') || {name:'', value:''};
   }
 
   const localRemove = () => {
-    ls.remove('document');
+    ls.remove('reactTextEditor');
     setFileAttributes({name:'', value: ''});
     setValue('');
     setEditorValue('');
@@ -177,7 +177,9 @@ export default function App() {
 
   useEffect(() => {
     if (localGet() !== null){
-      setEditorValue(localGet())
+      setEditorValue(localGet().value);
+      setValue(localGet().value);
+      setFileAttributes(localGet());
     }
   }, [])
 
@@ -191,15 +193,16 @@ export default function App() {
                 <FileReader onChange={handleChange} attributes={fileAttributes} />
               </TopNav.Item>
               <TopNav.Item href='#' variant='pill'>
-                { editorValue === '' ?  // Still in development
+                { editorValue === '' ?
                   <Button variant='ghost' iconBefore={'solid-hourglass-half'}>Waiting</Button>
-                : fileAttributes.value === editorValue || localGet() === editorValue ? 
+                 : localGet().value === editorValue ? 
                   <Button variant='ghost' iconBefore={'solid-check'} >Saved</Button>
-                : 
+                 : fileAttributes.value === editorValue ?
+                  <Button variant='ghost' iconBefore={'solid-check'} >Imported</Button>
+                 : /* fileAttributes.value !== '' && fileAttributes.value !== localGet().value ? */
                   <Clickable
                     use={Button}
                     iconBefore={'solid-save'} 
-                    // onClick={() => alert('Clicked')}
                     onClick={handleSave}
                   >
                     Save
@@ -212,8 +215,6 @@ export default function App() {
                     // disabled
                     variant='ghost'
                     iconBefore={'solid-file-download'}
-                    // onClick={() => alert('Clicked')}
-                    // onClick={handleDownload}
                   >
                     Download
                   </Button>
@@ -221,7 +222,6 @@ export default function App() {
                   <Clickable
                     use={Button}
                     iconBefore={'solid-file-download'} 
-                    // onClick={() => alert('Clicked')}
                     onClick={handleDownload}
                   >
                     Download
