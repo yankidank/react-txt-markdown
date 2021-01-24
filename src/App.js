@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import ls from 'local-storage';
 // import parse from 'html-react-parser';
 import { Provider as BumbagProvider, css } from 'bumbag';
-import { Columns, Box, TopNav, Button, Textarea, Clickable } from 'bumbag';
+import { Columns, Box, Group, Button, Textarea, Clickable } from 'bumbag';
 import BumbagMarkdown from './Bumbag/BumbagMarkdown';
 import { faFolder, faFolderOpen, faSave, faFileDownload, faCheck, faTimes, faHourglassHalf } from '@fortawesome/free-solid-svg-icons';
 import FileReader from './FileReader';
@@ -113,7 +113,12 @@ export default function App() {
   const handleChange = (newValue) => {
     setFileAttributes(newValue);
     setValue(newValue.value);
-    setEditorValue(newValue.value)
+    setEditorValue(newValue.value);
+    if (localGet.value === undefined){ 
+      localSet(newValue)
+    } else if (localGet.name !== fileAttributes.name){
+      localSet(newValue)
+    };
   }
 
   const handleSave = () => {
@@ -129,12 +134,12 @@ export default function App() {
     let checkValue = {...newValue, value: ''};
     if ( newValue === undefined || newValue.value === undefined){
       checkValue = {...fileAttributes, value: ''};
-    } else if ( newValue !== undefined && newValue.value !== undefined ){
-      checkValue = {...newValue, value: newValue.value};
+    } else if ( newValue.name !== undefined && newValue.value !== undefined ){
+      checkValue = {...newValue};
     } else {
       checkValue = {...fileAttributes, value: document.getElementById('editor') ? document.getElementById('editor').value : ''};
     }
-    ls.set('reactTextEditor', {...fileAttributes, value: checkValue.value});
+    ls.set('reactTextEditor', checkValue);
   }
 
   const localGet = () => {
@@ -186,65 +191,67 @@ export default function App() {
   return (
     <div className='App'>
       <BumbagProvider theme={theme}>
-        <Box backgroundColor='#f5f5f5' padding='0.2rem' margin='0' minHeight="68px">
-          <TopNav>
-            <TopNav.Section>
-              <TopNav.Item href='#' variant='pill'>
-                <FileReader onChange={handleChange} attributes={fileAttributes} />
-              </TopNav.Item>
-              <TopNav.Item href='#' variant='pill'>
-                { editorValue === '' ?
-                  <Button variant='ghost' iconBefore={'solid-hourglass-half'}>Waiting</Button>
-                 : localGet().value === editorValue ? 
-                  <Button variant='ghost' iconBefore={'solid-check'} >Saved</Button>
-                 : fileAttributes.value === editorValue ?
-                  <Button variant='ghost' iconBefore={'solid-check'} >Imported</Button>
-                 : /* fileAttributes.value !== '' && fileAttributes.value !== localGet().value ? */
-                  <Clickable
-                    use={Button}
-                    iconBefore={'solid-save'} 
-                    onClick={handleSave}
-                  >
-                    Save
-                  </Clickable>
-                }
-              </TopNav.Item>
-              <TopNav.Item href='#' variant='pill'>
-                {editorValue === '' ? 
-                  <Button
-                    // disabled
-                    variant='ghost'
-                    iconBefore={'solid-file-download'}
-                  >
-                    Download
-                  </Button>
-                 : 
-                  <Clickable
-                    use={Button}
-                    iconBefore={'solid-file-download'} 
-                    onClick={handleDownload}
-                  >
-                    Download
-                  </Clickable>
-                }
-              </TopNav.Item>
-              <TopNav.Item>
-                <Clickable
-                  use={Button}
-                  palette="danger"
-                  iconBefore={'solid-times'} 
-                  onClick={localRemove}
-                >
-                  Clear
-                </Clickable>
-              </TopNav.Item>
-            </TopNav.Section>
-            {/* <TopNav.Section>
-              <TopNav.Item paddingRight='15px' fontWeight='semibold'>
-                <PrintTime />
-              </TopNav.Item>
-            </TopNav.Section> */}
-          </TopNav>
+        <Box backgroundColor='#f5f5f5' padding='1rem' margin='0' minHeight="50px">
+          <Group>
+            <FileReader onChange={handleChange} attributes={fileAttributes} />
+            {editorValue === '' ? 
+              <Clickable 
+                use={Button}
+                // disabled
+                variant='ghost'
+                iconBefore={'solid-file-download'}
+              >
+                Download
+              </Clickable>
+            : 
+              <Clickable
+                use={Button}
+                palette="primary"
+                variant="outlined"
+                iconBefore={'solid-file-download'} 
+                onClick={handleDownload}
+              >
+                Download
+              </Clickable>
+            }
+            { editorValue === '' ?
+              <Clickable use={Button} variant='ghost' iconBefore={'solid-hourglass-half'}>Waiting</Clickable>
+            : localGet().value === editorValue ? 
+              <Clickable use={Button} variant='ghost' iconBefore={'solid-check'} >Saved</Clickable>
+            : fileAttributes.value === editorValue ?
+              <Clickable use={Button} variant='ghost' iconBefore={'solid-check'} >Imported</Clickable>
+            : /* fileAttributes.value !== '' && fileAttributes.value !== localGet().value ? */
+              <Clickable
+                use={Button}
+                palette="primary"
+                variant="outlined"
+                iconBefore={'solid-save'} 
+                onClick={handleSave}
+              >
+                Save
+              </Clickable>
+            }
+            {localGet().value !== ''?
+              <Clickable
+                use={Button}
+                palette="primary"
+                variant="outlined"
+                iconBefore={'solid-times'} 
+                onClick={localRemove}
+              >
+                Clear
+              </Clickable>
+            :
+              <Clickable
+                use={Button}
+                variant='ghost'
+                iconBefore={'solid-times'} 
+                onClick={localRemove}
+              >
+                Clear
+              </Clickable>
+            }
+          </Group>
         </Box>
         <Box height='90vh'>
           <Columns>
