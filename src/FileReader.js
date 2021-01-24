@@ -28,7 +28,8 @@ export const FileReader = (props) => {
 		>
 			<Button 
 				// variant="outlined" 
-				variant={ props.attributes.name ? 'ghost' : ''}
+				palette={'primary'}
+				variant={ props.attributes.name ? 'default' : 'outlined'}
 				iconBefore={ props.attributes.name ? 'solid-folder-open' : 'solid-folder'}
 			>
 				{props.attributes.name ? props.attributes.name : 'Select File'}
