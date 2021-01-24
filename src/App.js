@@ -156,8 +156,6 @@ export default function App() {
   const handleDownload = () => {
     const newValue = {...fileAttributes, value: value};
     fileDownload(newValue);
-    setFileAttributes(newValue);
-    setValue(newValue.value);
   }
 
   const fileDownload = (newValue) => {
@@ -169,6 +167,7 @@ export default function App() {
     element.href = URL.createObjectURL(file);
     element.download = fileName;
     document.body.appendChild(element); // Required for this to work in FireFox
+    setFileAttributes({...fileAttributes, name: fileName+'.txt'});
     element.click();
   }
 /*   
