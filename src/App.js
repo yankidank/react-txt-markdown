@@ -6,8 +6,17 @@ import { Columns, Box, Group, Button, Textarea, Clickable } from 'bumbag';
 import BumbagMarkdown from './Bumbag/BumbagMarkdown';
 import { faFolder, faFolderOpen, faSave, faFileDownload, faCheck, faTimes, faHourglassHalf } from '@fortawesome/free-solid-svg-icons';
 import FileReader from './FileReader';
-// import { PrintTime } from './utils/DateTime';
 import './App.css';
+
+const welcomeText = `## Welcome to React .txt Markdown
+Use the textarea on the left half of the screen to input markup-styled text and see it render on the right half in real time.
+#### Features:
+- Import a .txt file into the editor
+- Export content and download it as a .txt file
+- Save content so that you can resume writing later
+- Clear saved content and the textarea
+
+Supported markdown tag examples can be found in the sample.txt file included with this project.`;
 
 const theme = {
   palette: {
@@ -105,7 +114,7 @@ const theme = {
 }
 
 export default function App() {
-  
+
 	const [fileAttributes, setFileAttributes] = useState({name:'', value: ''});
   const [value, setValue] = React.useState(''); // Textarea value
   const [editorValue, setEditorValue] = React.useState(''); // logic value
@@ -145,9 +154,7 @@ export default function App() {
     setValue(newValue.value);
     localSet(newValue);
   }
-
   
-
   const localRemove = () => {
     ls.remove('reactTextEditor');
     setFileAttributes({name:'', value: ''});
@@ -180,13 +187,14 @@ export default function App() {
   } 
 */
 
-  // const filePlain = fileAttributes.value ? parse(fileAttributes.value.replace(/(?:\r\n|\r|\n)/g, '<br>')) : '';
-
   useEffect(() => {
-    if (localGet() !== null){
+    if (localGet() !== null && localGet().value !== ''){
       setEditorValue(localGet().value);
       setValue(localGet().value);
       setFileAttributes(localGet());
+    } else {
+      // setEditorValue(welcomeText);
+      setValue(welcomeText);
     }
   }, [])
 
@@ -199,7 +207,7 @@ export default function App() {
             {editorValue === '' ? 
               <Clickable 
                 use={Button}
-                // disabled
+                disabled
                 variant='ghost'
                 iconBefore={'solid-file-download'}
               >
@@ -217,11 +225,9 @@ export default function App() {
               </Clickable>
             }
             { editorValue === '' ?
-              <Clickable use={Button} variant='ghost' iconBefore={'solid-hourglass-half'}>Waiting</Clickable>
-            : localGet().value === editorValue ? 
-              <Clickable use={Button} variant='ghost' iconBefore={'solid-check'} >Saved</Clickable>
-            : fileAttributes.value === editorValue ?
-              <Clickable use={Button} variant='ghost' iconBefore={'solid-check'} >Imported</Clickable>
+              <Clickable use={Button} disabled variant='ghost' iconBefore={'solid-save'}>Save</Clickable>
+            : localGet().value === editorValue || fileAttributes.value === editorValue ? 
+              <Clickable use={Button} disabled variant='ghost' iconBefore={'solid-check'} >Save</Clickable>
             : /* fileAttributes.value !== '' && fileAttributes.value !== localGet().value ? */
               <Clickable
                 use={Button}
@@ -236,8 +242,7 @@ export default function App() {
             {localGet().value !== ''?
               <Clickable
                 use={Button}
-                palette="primary"
-                variant="outlined"
+                palette="danger"
                 iconBefore={'solid-times'} 
                 onClick={localRemove}
               >
@@ -247,6 +252,7 @@ export default function App() {
               <Clickable
                 use={Button}
                 variant='ghost'
+                disabled
                 iconBefore={'solid-times'} 
                 onClick={localRemove}
               >
@@ -264,6 +270,7 @@ export default function App() {
                   className="editor-textarea"
                   value={editorValue}
                   // onKeyPress={handleKeyPress}
+                  placeholder={welcomeText}
                   onChange={e => { setValue(e.target.value); setEditorValue(e.target.value) }}
                 />
               </Box>
