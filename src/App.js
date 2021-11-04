@@ -109,6 +109,23 @@ export default function App() {
 	const [fileAttributes, setFileAttributes] = useState({name:'', value: ''});
   const [value, setValue] = React.useState(''); // Textarea value
   const [editorValue, setEditorValue] = React.useState(''); // logic value
+  
+  const localGet = () => {
+    return ls.get('reactTextEditor') || {name:'', value:''};
+  }
+
+  const localSet = (newValue) => {
+    // const {name, value } = newValue;
+    let checkValue = {...newValue, value: ''};
+    if ( newValue === undefined || newValue.value === undefined){
+      checkValue = {...fileAttributes, value: ''};
+    } else if ( newValue.name !== undefined && newValue.value !== undefined ){
+      checkValue = {...newValue};
+    } else {
+      checkValue = {...fileAttributes, value: document.getElementById('editor') ? document.getElementById('editor').value : ''};
+    }
+    ls.set('reactTextEditor', checkValue);
+  }
 
   const handleChange = (newValue) => {
     setFileAttributes(newValue);
@@ -129,33 +146,13 @@ export default function App() {
     localSet(newValue);
   }
 
-  const localSet = (newValue) => {
-    // const {name, value } = newValue;
-    let checkValue = {...newValue, value: ''};
-    if ( newValue === undefined || newValue.value === undefined){
-      checkValue = {...fileAttributes, value: ''};
-    } else if ( newValue.name !== undefined && newValue.value !== undefined ){
-      checkValue = {...newValue};
-    } else {
-      checkValue = {...fileAttributes, value: document.getElementById('editor') ? document.getElementById('editor').value : ''};
-    }
-    ls.set('reactTextEditor', checkValue);
-  }
-
-  const localGet = () => {
-    return ls.get('reactTextEditor') || {name:'', value:''};
-  }
+  
 
   const localRemove = () => {
     ls.remove('reactTextEditor');
     setFileAttributes({name:'', value: ''});
     setValue('');
     setEditorValue('');
-  }
-
-  const handleDownload = () => {
-    const newValue = {...fileAttributes, value: value};
-    fileDownload(newValue);
   }
 
   const fileDownload = (newValue) => {
@@ -170,6 +167,12 @@ export default function App() {
     setFileAttributes({...fileAttributes, name: fileName+'.txt'});
     element.click();
   }
+
+  const handleDownload = () => {
+    const newValue = {...fileAttributes, value: value};
+    fileDownload(newValue);
+  }
+
 /*   
   const handleKeyPress = (event) => {
     event.stopPropagation();
@@ -190,7 +193,7 @@ export default function App() {
   return (
     <div className='App'>
       <BumbagProvider theme={theme}>
-        <Box backgroundColor='#f5f5f5' padding='1rem' margin='0' minHeight="50px">
+        <Box backgroundColor='#f5f5f5' padding='1rem' margin='0' height="10vh" minHeight="68px" className="header">
           <Group>
             <FileReader onChange={handleChange} attributes={fileAttributes} />
             {editorValue === '' ? 
@@ -252,12 +255,13 @@ export default function App() {
             }
           </Group>
         </Box>
-        <Box height='90vh'>
+        <Box className="content">
           <Columns>
             <Columns.Column spread={6}>
               <Box padding='0.75rem'>
                 <Textarea
                   id='editor'
+                  className="editor-textarea"
                   value={editorValue}
                   // onKeyPress={handleKeyPress}
                   onChange={e => { setValue(e.target.value); setEditorValue(e.target.value) }}
