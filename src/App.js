@@ -165,9 +165,9 @@ export default function App() {
   const fileDownload = (newValue) => {
     // Save to new file
     const shortName = newValue.name ? newValue.name.slice(0, -4) : null;
-    const fileName = prompt('Name the text file', shortName || 'export') || shortName || 'export';
+    const fileName = prompt('Name the text file', shortName || 'export').toString() || shortName.toString() || 'export';
     const element = document.createElement('a');
-    const file = new Blob([document.getElementById('editor').value], {type: 'text/plain'});
+    const file = new Blob([document.getElementById('editor').value.toString()], {type: 'text/plain'});
     element.href = URL.createObjectURL(file);
     element.download = fileName;
     document.body.appendChild(element); // Required for this to work in FireFox
