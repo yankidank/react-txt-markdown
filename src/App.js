@@ -4,7 +4,7 @@ import ls from 'local-storage';
 import { Provider as BumbagProvider, css } from 'bumbag';
 import { Columns, Box, Group, Button, Textarea, Clickable } from 'bumbag';
 import BumbagMarkdown from './Bumbag/BumbagMarkdown';
-import { faFolder, faFolderOpen, faSave, faFileDownload, faCheck, faTimes, faHourglassHalf } from '@fortawesome/free-solid-svg-icons';
+import { faFolder, faFolderOpen, faSave, faFileDownload, faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
 import FileReader from './FileReader';
 import './App.css';
 
@@ -40,7 +40,7 @@ const theme = {
   Icon: {
     iconSets: [
       {
-        icons: [faFolder, faFolderOpen, faSave, faFileDownload, faCheck, faTimes, faHourglassHalf],
+        icons: [faFolder, faFolderOpen, faSave, faFileDownload, faCheck, faTimes],
         prefix: 'solid-',
         type: 'font-awesome'
       }
@@ -201,7 +201,7 @@ export default function App() {
   return (
     <div className='App'>
       <BumbagProvider theme={theme}>
-        <Box backgroundColor='#f5f5f5' padding='1rem' margin='0' height="10vh" minHeight="68px" className="header">
+        <Box backgroundColor='#f5f5f5' padding='1rem' margin='0' minHeight="68px" className="header">
           <Group>
             <FileReader onChange={handleChange} attributes={fileAttributes} />
             {editorValue === '' ? 
@@ -264,7 +264,7 @@ export default function App() {
         <Box className="content">
           <Columns>
             <Columns.Column spread={6}>
-              <Box padding='0.75rem'>
+              <Box padding='0.75rem' className="textarea-box">
                 <Textarea
                   id='editor'
                   className="editor-textarea"
