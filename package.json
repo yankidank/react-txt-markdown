@@ -1,7 +1,7 @@
 {
+  "homepage": "https://yankidank.github.io/react-txt-markdown/",
   "name": "react-text-editor",
   "version": "0.1.1",
-  "homepage": "https://yankidank.github.io/react-txt-markdown/",
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.36",
     "@fortawesome/free-solid-svg-icons": "^5.15.4",
