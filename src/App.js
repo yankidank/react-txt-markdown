@@ -4,7 +4,8 @@ import ls from 'local-storage';
 import { Provider as BumbagProvider, css } from 'bumbag';
 import { Columns, Box, Group, Button, Textarea, Clickable } from 'bumbag';
 import BumbagMarkdown from './Bumbag/BumbagMarkdown';
-import { faFolder, faFolderOpen, faSave, faFileDownload, faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSave, faFileDownload, faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
 import FileReader from './FileReader';
 import './App.css';
 
@@ -36,15 +37,6 @@ const theme = {
         }
       `
     }
-  },
-  Icon: {
-    iconSets: [
-      {
-        icons: [faFolder, faFolderOpen, faSave, faFileDownload, faCheck, faTimes],
-        prefix: 'solid-',
-        type: 'font-awesome'
-      }
-    ]
   },
   Button: {
     variants: {
@@ -209,8 +201,8 @@ export default function App() {
                 use={Button}
                 disabled
                 variant='ghost'
-                iconBefore={'solid-file-download'}
               >
+                <FontAwesomeIcon icon={faFileDownload} /> 
                 Download
               </Clickable>
             : 
@@ -218,24 +210,24 @@ export default function App() {
                 use={Button}
                 palette="primary"
                 variant="outlined"
-                iconBefore={'solid-file-download'} 
                 onClick={handleDownload}
               >
+                <FontAwesomeIcon icon={faFileDownload} /> 
                 Download
               </Clickable>
             }
             { editorValue === '' ?
-              <Clickable use={Button} disabled variant='ghost' iconBefore={'solid-save'}>Save</Clickable>
+              <Clickable use={Button} disabled variant='ghost'><FontAwesomeIcon icon={faSave} />Save</Clickable>
             : localGet().value === editorValue || fileAttributes.value === editorValue ? 
-              <Clickable use={Button} disabled variant='ghost' iconBefore={'solid-check'} >Save</Clickable>
+              <Clickable use={Button} disabled variant='ghost'><FontAwesomeIcon icon={faCheck} />Save</Clickable>
             : /* fileAttributes.value !== '' && fileAttributes.value !== localGet().value ? */
               <Clickable
                 use={Button}
                 palette="primary"
                 variant="outlined"
-                iconBefore={'solid-save'} 
                 onClick={handleSave}
               >
+                <FontAwesomeIcon icon={faSave} /> 
                 Save
               </Clickable>
             }
@@ -243,9 +235,9 @@ export default function App() {
               <Clickable
                 use={Button}
                 palette="danger"
-                iconBefore={'solid-times'} 
                 onClick={localRemove}
               >
+                <FontAwesomeIcon icon={faTimes} /> 
                 Clear
               </Clickable>
             :
@@ -253,9 +245,9 @@ export default function App() {
                 use={Button}
                 variant='ghost'
                 disabled
-                iconBefore={'solid-times'} 
                 onClick={localRemove}
               >
+                <FontAwesomeIcon icon={faTimes} /> 
                 Clear
               </Clickable>
             }
@@ -276,7 +268,7 @@ export default function App() {
               </Box>
             </Columns.Column>
             <Columns.Column spread={6}>
-              <Box padding='0.75rem'>
+              <Box padding='1rem 0.75rem'>
                 <BumbagMarkdown 
                   onChange={handleChange}
                   markdown={value} 
