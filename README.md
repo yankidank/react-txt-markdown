@@ -1,6 +1,10 @@
 # React .txt File Markdown
 
-Select a .txt file and render it using markdown in your browser.  
+A React based text editor with live markdown rendering. Upload and download .txt files and save content to browser cache.
+
+## Demo
+[Click here for a demo](https://yankidank.github.io/react-txt-markdown/), hosted by GitHub Pages.
+
 
 [
 ![react-text-editor](https://user-images.githubusercontent.com/18619/105570240-d5001b00-5cfc-11eb-9d88-966cc6c959b3.png)
